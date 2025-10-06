@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${questionNumber} + ' / ' + ${totalQuestions} + '번 문제'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>삼성 GSAT 자료해석 연습</h1>
+</header>
+<main>
+    <section>
+        <h2 th:text="${questionNumber} + '번 문제'"></h2>
+        <p>총 <span th:text="${totalQuestions}"></span>문제 중 <span th:text="${questionNumber}"></span>번째 문제입니다.</p>
+        <p class="timer">남은 시간: <span id="timer" th:text="${timeLimit}"></span>초</p>
+        <div class="question-box">
+            <pre th:text="${problem.question}"></pre>
+        </div>
+        <form th:action="@{/practice/answer}" method="post">
+            <label for="answer">답안을 입력하세요.</label>
+            <input id="answer" name="answer" type="text" autocomplete="off" required>
+            <button type="submit">제출</button>
+        </form>
+    </section>
+    <div class="navigation-links">
+        <a class="btn" th:href="@{/practice/history}">지난 연습 기록 보기</a>
+    </div>
+</main>
+<script th:inline="javascript">
+    const timeLimit = /*[[${timeLimit}]]*/ 30;
+    let remaining = timeLimit;
+    const timerElement = document.getElementById('timer');
+    const countdown = setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) {
+            timerElement.textContent = '0';
+            clearInterval(countdown);
+        } else {
+            timerElement.textContent = remaining.toString();
+        }
+    }, 1000);
+</script>
+</body>
+</html>

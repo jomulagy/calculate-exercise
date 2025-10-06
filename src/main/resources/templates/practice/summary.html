@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>세트 결과 요약</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>삼성 GSAT 자료해석 연습</h1>
+</header>
+<main>
+    <section>
+        <h2>연습 세트 결과</h2>
+        <p>완료 일시: <strong th:text="${#temporals.format(batchResult.completedAt, 'yyyy-MM-dd HH:mm:ss')}"></strong></p>
+        <p>문제당 제한 시간: <strong th:text="${batchResult.timeLimitSeconds}"></strong>초</p>
+        <p>정답: <strong th:text="${batchResult.correctCount}"></strong> / <strong th:text="${batchResult.totalProblems}"></strong></p>
+        <p>정답률: <strong th:text="${#numbers.formatDecimal(batchResult.accuracy, 1, 1)}"></strong>%</p>
+
+        <table>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>문제</th>
+                <th>정답 여부</th>
+                <th>제출 답안</th>
+                <th>소요 시간(초)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result, iterStat : ${batchResult.problemResults}">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td><pre th:text="${result.problem.question}"></pre></td>
+                <td th:text="${result.checkResult.correct()} ? '정답' : '오답'"></td>
+                <td th:text="${result.userAnswer}"></td>
+                <td th:text="${#numbers.formatDecimal(result.elapsedSeconds, 1, 1)}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="navigation-links">
+            <a class="btn" th:href="@{/practice}">새 연습 시작</a>
+            <a class="btn" th:href="@{/practice/history}">지난 연습 기록 보기</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

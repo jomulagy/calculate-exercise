@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GSAT 자료해석 연습 시작</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>삼성 GSAT 자료해석 연습</h1>
+</header>
+<main>
+    <section>
+        <h2>연습 시작하기</h2>
+        <p>문제당 제한 시간을 선택한 뒤 연습을 시작하세요. 한 세트는 5개의 문제로 구성됩니다.</p>
+        <form th:action="@{/practice/start}" method="post">
+            <label for="timeLimit">문제당 제한 시간 (초)</label>
+            <input id="timeLimit" name="timeLimit" type="number" value="30" min="5" max="300" required>
+            <button type="submit">연습 시작</button>
+        </form>
+    </section>
+    <div class="navigation-links">
+        <a class="btn" th:href="@{/practice/history}">지난 연습 기록 보기</a>
+    </div>
+</main>
+</body>
+</html>
