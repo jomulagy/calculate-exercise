@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>연습 기록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>삼성 GSAT 자료해석 연습</h1>
+</header>
+<main>
+    <section>
+        <h2>연습 기록</h2>
+        <p th:if="${history.isEmpty()}">아직 저장된 연습 기록이 없습니다. 새로운 연습을 시작해보세요!</p>
+        <table th:if="${!history.isEmpty()}">
+            <thead>
+            <tr>
+                <th>완료 일시</th>
+                <th>정답수</th>
+                <th>정답률</th>
+                <th>제한 시간(초)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${history}">
+                <td th:text="${#temporals.format(entry.completedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td th:text="${entry.correctCount} + ' / ' + entry.totalProblems"></td>
+                <td th:text="${#numbers.formatDecimal(entry.accuracy, 1, 1)} + '%' "></td>
+                <td th:text="${entry.timeLimitSeconds}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section th:if="${!history.isEmpty()}">
+        <h2>정답률 추세</h2>
+        <canvas id="historyChart" width="400" height="200"></canvas>
+    </section>
+
+    <div class="navigation-links">
+        <a class="btn" th:href="@{/practice}">새 연습 시작</a>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:if="${!history.isEmpty()}" th:inline="javascript">
+    const labels = [
+        /*[# th:each="entry : ${history}"]*/
+        '/*[[${#temporals.format(entry.completedAt, 'MM-dd HH:mm')}]]*/',
+        /*[/]*/
+    ];
+    const accuracies = [
+        /*[# th:each="entry : ${history}"]*/
+        /*[[${entry.accuracy}]]*/,
+        /*[/]*/
+    ];
+
+    const ctx = document.getElementById('historyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '정답률 (%)',
+                data: accuracies,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.15)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
